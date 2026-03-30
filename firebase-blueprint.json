@@ -1,0 +1,42 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "Stores user settings like daily rate and tax preferences.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "displayName": { "type": "string" },
+        "email": { "type": "string" },
+        "dailyRate": { "type": "number", "description": "Standard daily wage" },
+        "taxRate": { "type": "number", "description": "Tax percentage (e.g., 3.3)" },
+        "memo": { "type": "string" }
+      },
+      "required": ["uid", "email"]
+    },
+    "WorkLog": {
+      "title": "Work Log",
+      "description": "A single entry for a day's work.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Owner of the log" },
+        "date": { "type": "string", "format": "date", "description": "YYYY-MM-DD" },
+        "gongsu": { "type": "number", "description": "Amount of work (e.g., 0.5, 1.0, 1.5)" },
+        "siteName": { "type": "string" },
+        "memo": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "date", "gongsu"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile and settings"
+    },
+    "/workLogs/{logId}": {
+      "schema": "WorkLog",
+      "description": "Individual work entries"
+    }
+  }
+}

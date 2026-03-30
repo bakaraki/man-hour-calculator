@@ -1,0 +1,82 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: {userId} (matches auth.uid)
+    // Fields:
+    //   - uid: string (required)
+    //   - displayName: string
+    //   - email: string (required)
+    //   - dailyRate: number
+    //   - taxRate: number
+    //   - memo: string
+    //
+    // Collection: workLogs
+    // Document ID: {logId} (auto-generated or custom)
+    // Fields:
+    //   - uid: string (required, owner)
+    //   - date: string (required, YYYY-MM-DD)
+    //   - gongsu: number (required)
+    //   - siteName: string
+    //   - memo: string
+    //   - createdAt: timestamp
+    //
+    // ===============================================================
+
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isDocOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.uid;
+    }
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['uid', 'email']) &&
+             data.uid is string &&
+             data.email is string &&
+             (!('dailyRate' in data) || data.dailyRate is number) &&
+             (!('taxRate' in data) || data.taxRate is number);
+    }
+
+    function isValidWorkLog(data) {
+      return data.keys().hasAll(['uid', 'date', 'gongsu']) &&
+             data.uid == request.auth.uid &&
+             data.date is string &&
+             data.date.matches("^\\d{4}-\\d{2}-\\d{2}$") &&
+             data.gongsu is number &&
+             data.gongsu >= 0 && data.gongsu <= 5;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+          (request.auth.token.email == "badroo918@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    // Rules
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isOwner(userId) && isValidUser(request.resource.data);
+      allow update: if isOwner(userId) && isValidUser(request.resource.data) && request.resource.data.uid == resource.data.uid;
+      allow delete: if isAdmin();
+    }
+
+    match /workLogs/{logId} {
+      allow read: if isDocOwner() || isAdmin();
+      allow create: if isAuthenticated() && isValidWorkLog(request.resource.data);
+      allow update: if isDocOwner() && isValidWorkLog(request.resource.data) && request.resource.data.uid == resource.data.uid;
+      allow delete: if isDocOwner() || isAdmin();
+    }
+  }
+}
