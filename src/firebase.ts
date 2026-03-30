@@ -5,11 +5,11 @@ import { getFirestore } from 'firebase/firestore';
 // Use environment variables (Vite's process.env or import.meta.env)
 // These are injected via vite.config.ts from firebase-applet-config.json or actual env vars
 const firebaseConfig = {
-  apiKey: (process.env as any).VITE_FIREBASE_API_KEY,
-  authDomain: (process.env as any).VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: (process.env as any).VITE_FIREBASE_PROJECT_ID,
-  appId: (process.env as any).VITE_FIREBASE_APP_ID,
-  firestoreDatabaseId: (process.env as any).VITE_FIREBASE_DATABASE_ID
+  apiKey: (import.meta as any).env.VITE_FIREBASE_API_KEY,
+  authDomain: (import.meta as any).env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: (import.meta as any).env.VITE_FIREBASE_PROJECT_ID,
+  appId: (import.meta as any).env.VITE_FIREBASE_APP_ID,
+  firestoreDatabaseId: (import.meta as any).env.VITE_FIREBASE_DATABASE_ID
 };
 
 const app = initializeApp(firebaseConfig);

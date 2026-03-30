@@ -24,11 +24,11 @@ export default defineConfig(({mode}) => {
     plugins: [react(), tailwindcss()],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(mergedEnv.GEMINI_API_KEY),
-      'process.env.VITE_FIREBASE_API_KEY': JSON.stringify(mergedEnv.VITE_FIREBASE_API_KEY || mergedEnv.apiKey),
-      'process.env.VITE_FIREBASE_AUTH_DOMAIN': JSON.stringify(mergedEnv.VITE_FIREBASE_AUTH_DOMAIN || mergedEnv.authDomain),
-      'process.env.VITE_FIREBASE_PROJECT_ID': JSON.stringify(mergedEnv.VITE_FIREBASE_PROJECT_ID || mergedEnv.projectId),
-      'process.env.VITE_FIREBASE_APP_ID': JSON.stringify(mergedEnv.VITE_FIREBASE_APP_ID || mergedEnv.appId),
-      'process.env.VITE_FIREBASE_DATABASE_ID': JSON.stringify(mergedEnv.VITE_FIREBASE_DATABASE_ID || mergedEnv.firestoreDatabaseId),
+      'import.meta.env.VITE_FIREBASE_API_KEY': JSON.stringify(mergedEnv.VITE_FIREBASE_API_KEY || mergedEnv.apiKey),
+      'import.meta.env.VITE_FIREBASE_AUTH_DOMAIN': JSON.stringify(mergedEnv.VITE_FIREBASE_AUTH_DOMAIN || mergedEnv.authDomain),
+      'import.meta.env.VITE_FIREBASE_PROJECT_ID': JSON.stringify(mergedEnv.VITE_FIREBASE_PROJECT_ID || mergedEnv.projectId),
+      'import.meta.env.VITE_FIREBASE_APP_ID': JSON.stringify(mergedEnv.VITE_FIREBASE_APP_ID || mergedEnv.appId),
+      'import.meta.env.VITE_FIREBASE_DATABASE_ID': JSON.stringify(mergedEnv.VITE_FIREBASE_DATABASE_ID || mergedEnv.firestoreDatabaseId),
     },
     resolve: {
       alias: {
